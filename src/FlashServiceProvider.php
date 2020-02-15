@@ -19,14 +19,6 @@ class FlashServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'flash');
-
-        if ($this->app->runningInConsole()) {
-            $this->publishes([
-                __DIR__.'/../resources/views' => $this->app->resourcePath('views/vendor/flash'),
-            ], 'views');
-        }
-
-        $this->app->bind('flash', fn () => resolve(Flash::class));
+        $this->app->bind('kodekeep.flash', fn () => resolve(Flash::class));
     }
 }

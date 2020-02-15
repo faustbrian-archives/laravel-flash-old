@@ -19,6 +19,6 @@ class Flash extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return 'flash';
+        return 'kodekeep.flash';
     }
 }
