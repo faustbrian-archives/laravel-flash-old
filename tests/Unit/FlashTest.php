@@ -111,6 +111,24 @@ class FlashTest extends TestCase
     }
 
     /** @test */
+    public function it_can_assert_that_a_flash_message_exists(): void
+    {
+        Flash::levels([
+            'warning' => 'my-warning-class',
+        ]);
+
+        Flash::warning('my warning');
+
+        $this->assertTrue(Flash::hasMessage());
+
+        $this->assertFalse(Flash::hasMessage('unique-id'));
+
+        Flash::warning('my warning', 'unique-id');
+
+        $this->assertTrue(Flash::hasMessage('unique-id'));
+    }
+
+    /** @test */
     public function empty_flash_message_returns_null(): void
     {
         $this->assertNull(Flash::getMessage());

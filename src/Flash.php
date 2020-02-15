@@ -35,8 +35,8 @@ class Flash
             return false;
         }
 
-        if ($id && $this->session->get($this->sessionKey.'.id') !== $id) {
-            return true;
+        if ($id) {
+            return $this->session->get($this->sessionKey.'.id') === $id;
         }
 
         return true;
