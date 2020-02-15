@@ -32,20 +32,32 @@ class Flash
         return $this->getMessage()->$name ?? null;
     }
 
-    public function hasMessage(): bool
+    public function hasMessage(?string $id = null): bool
     {
-        return $this->session->has('laravel_flash_message');
+        if (! $this->session->has('laravel_flash_message')) {
+            return false;
+        }
+
+        if ($id && $this->session->get('laravel_flash_message.id') !== $id) {
+            return true;
+        }
+
+        return true;
     }
 
-    public function getMessage(): ?Message
+    public function getMessage(?string $id = null): ?Message
     {
-        if (! $this->hasMessage()) {
+        if (! $this->hasMessage($id)) {
             return null;
         }
 
         $flashedMessage = $this->session->get('laravel_flash_message');
 
-        return new Message($flashedMessage['message'], $flashedMessage['class']);
+        if ($id && $flashedMessage['id'] !== $id) {
+            return null;
+        }
+
+        return Message::create(...array_values($flashedMessage));
     }
 
     public function flash(Message $message): void
@@ -53,10 +65,13 @@ class Flash
         $this->session->flash('laravel_flash_message', $message->toArray());
     }
 
-    public static function levels(array $methodClasses): void
+    public static function levels(array $methods): void
     {
-        foreach ($methodClasses as $method => $classes) {
-            self::macro($method, fn (string $message) => $this->flash(new Message($message, $classes)));
+        foreach ($methods as $method => $class) {
+            self::macro(
+                $method,
+                fn (string $message, ?string $id = null) => $this->flash(Message::create($message, $class, $id))
+            );
         }
     }
 }

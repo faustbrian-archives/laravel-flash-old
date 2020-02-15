@@ -21,6 +21,7 @@
         "illuminate/support": "^6.0"
     },
     "require-dev": {
+        "dms/phpunit-arraysubset-asserts": "^0.2.0",
         "friendsofphp/php-cs-fixer": "^2.16",
         "graham-campbell/analyzer": "^2.4",
         "orchestra/testbench": "^4.0"
