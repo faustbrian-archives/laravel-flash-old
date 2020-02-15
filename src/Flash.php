@@ -20,25 +20,22 @@ class Flash
 {
     use Macroable;
 
-    protected Session $session;
+    private Session $session;
+
+    private string $sessionKey = 'laravel_flash_message';
 
     public function __construct(Session $session)
     {
         $this->session = $session;
     }
 
-    public function __get(string $name)
-    {
-        return $this->getMessage()->$name ?? null;
-    }
-
     public function hasMessage(?string $id = null): bool
     {
-        if (! $this->session->has('laravel_flash_message')) {
+        if (! $this->session->has($this->sessionKey)) {
             return false;
         }
 
-        if ($id && $this->session->get('laravel_flash_message.id') !== $id) {
+        if ($id && $this->session->get($this->sessionKey.'.id') !== $id) {
             return true;
         }
 
@@ -51,7 +48,7 @@ class Flash
             return null;
         }
 
-        $flashedMessage = $this->session->get('laravel_flash_message');
+        $flashedMessage = $this->session->get($this->sessionKey);
 
         if ($id && $flashedMessage['id'] !== $id) {
             return null;
@@ -62,7 +59,7 @@ class Flash
 
     public function flash(Message $message): void
     {
-        $this->session->flash('laravel_flash_message', $message->toArray());
+        $this->session->flash($this->sessionKey, $message->toArray());
     }
 
     public static function levels(array $methods): void
