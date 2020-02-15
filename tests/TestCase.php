@@ -23,7 +23,9 @@ abstract class TestCase extends OrchestraTestCase
     {
         parent::setUp();
 
-        Flash::levels(['success' => 'green']);
+        Flash::levels([
+            'success' => ['class' => 'green'],
+        ]);
     }
 
     protected function getPackageProviders($app): array

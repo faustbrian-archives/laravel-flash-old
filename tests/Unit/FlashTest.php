@@ -65,8 +65,8 @@ class FlashTest extends TestCase
     public function multiple_methods_can_be_added_in_one_go(): void
     {
         Flash::levels([
-            'warning' => 'my-warning-class',
-            'error'   => 'my-error-class',
+            'warning' => ['class' => 'my-warning-class'],
+            'error'   => ['class' => 'my-error-class'],
         ]);
 
         Flash::warning('my warning');
@@ -88,7 +88,7 @@ class FlashTest extends TestCase
     public function it_can_flash_messages_with_a_given_id(): void
     {
         Flash::levels([
-            'warning' => 'my-warning-class',
+            'warning' => ['class' => 'my-warning-class'],
         ]);
 
         Flash::warning('my warning', 'unique-id');
@@ -114,7 +114,7 @@ class FlashTest extends TestCase
     public function it_can_assert_that_a_flash_message_exists(): void
     {
         Flash::levels([
-            'warning' => 'my-warning-class',
+            'warning' => ['class' => 'my-warning-class'],
         ]);
 
         Flash::warning('my warning');
@@ -126,6 +126,21 @@ class FlashTest extends TestCase
         Flash::warning('my warning', 'unique-id');
 
         $this->assertTrue(Flash::has('unique-id'));
+    }
+
+    /** @test */
+    public function can_specific_prefixes_per_level(): void
+    {
+        Flash::levels([
+            'warning' => [
+                'class'  => 'my-warning-class',
+                'prefix' => 'warn-',
+            ],
+        ]);
+
+        Flash::warning('my warning', 'unique-id');
+
+        $this->assertSame('warn-unique-id', Flash::get()->id);
     }
 
     /** @test */

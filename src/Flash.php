@@ -64,11 +64,12 @@ class Flash
 
     public static function levels(array $methods): void
     {
-        foreach ($methods as $method => $class) {
-            self::macro(
-                $method,
-                fn (string $message, ?string $id = null) => $this->set(Message::create($message, $class, $id))
-            );
+        foreach ($methods as $method => $options) {
+            self::macro($method, function (string $message, ?string $id = null) use ($options) {
+                $prefix = empty($options['prefix']) ? '' : $options['prefix'];
+
+                $this->set(Message::create($message, $options['class'], $prefix.$id));
+            });
         }
     }
 }
