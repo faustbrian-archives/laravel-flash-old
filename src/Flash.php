@@ -48,7 +48,7 @@ class Flash
             return null;
         }
 
-        $flashedMessage = $this->session->get($this->sessionKey);
+        $flashedMessage = $this->session->pull($this->sessionKey);
 
         if ($id && $flashedMessage['id'] !== $id) {
             return null;

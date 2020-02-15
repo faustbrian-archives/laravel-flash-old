@@ -99,6 +99,8 @@ class FlashTest extends TestCase
             'id'      => 'unique-id',
         ], Flash::getMessage()->toArray());
 
+        Flash::warning('my warning', 'unique-id');
+
         $this->assertSame([
             'message' => 'my warning',
             'class'   => 'my-warning-class',
