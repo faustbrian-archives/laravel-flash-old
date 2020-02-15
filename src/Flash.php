@@ -29,22 +29,9 @@ class Flash
         $this->session = $session;
     }
 
-    public function hasMessage(?string $id = null): bool
+    public function get(?string $id = null): ?Message
     {
-        if (! $this->session->has($this->sessionKey)) {
-            return false;
-        }
-
-        if ($id) {
-            return $this->session->get($this->sessionKey.'.id') === $id;
-        }
-
-        return true;
-    }
-
-    public function getMessage(?string $id = null): ?Message
-    {
-        if (! $this->hasMessage($id)) {
+        if (! $this->has($id)) {
             return null;
         }
 
@@ -57,9 +44,22 @@ class Flash
         return Message::create(...array_values($flashedMessage));
     }
 
-    public function flash(Message $message): void
+    public function set(Message $message): void
     {
         $this->session->flash($this->sessionKey, $message->toArray());
+    }
+
+    public function has(?string $id = null): bool
+    {
+        if (! $this->session->has($this->sessionKey)) {
+            return false;
+        }
+
+        if ($id) {
+            return $this->session->get($this->sessionKey.'.id') === $id;
+        }
+
+        return true;
     }
 
     public static function levels(array $methods): void
@@ -67,7 +67,7 @@ class Flash
         foreach ($methods as $method => $class) {
             self::macro(
                 $method,
-                fn (string $message, ?string $id = null) => $this->flash(Message::create($message, $class, $id))
+                fn (string $message, ?string $id = null) => $this->set(Message::create($message, $class, $id))
             );
         }
     }

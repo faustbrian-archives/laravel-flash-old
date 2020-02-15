@@ -32,7 +32,7 @@ class FlashTest extends TestCase
         $this->assertArraySubset([
             'message' => 'my message',
             'class'   => 'green',
-        ], Flash::getMessage()->toArray());
+        ], Flash::get()->toArray());
     }
 
     /** @test */
@@ -40,25 +40,25 @@ class FlashTest extends TestCase
     {
         $message = Message::create('my message', ['my-class', 'another-class']);
 
-        Flash::flash($message);
+        Flash::set($message);
 
         $this->assertArraySubset([
             'message' => 'my message',
             'class'   => 'my-class another-class',
-        ], Flash::getMessage()->toArray());
+        ], Flash::get()->toArray());
     }
 
     /** @test */
     public function the_flash_function_is_macroable(): void
     {
-        Flash::macro('info', fn (string $message) => $this->flash(Message::create($message, 'my-info-class')));
+        Flash::macro('info', fn (string $message) => $this->set(Message::create($message, 'my-info-class')));
 
         Flash::info('my message');
 
         $this->assertArraySubset([
             'message' => 'my message',
             'class'   => 'my-info-class',
-        ], Flash::getMessage()->toArray());
+        ], Flash::get()->toArray());
     }
 
     /** @test */
@@ -74,14 +74,14 @@ class FlashTest extends TestCase
         $this->assertArraySubset([
             'message' => 'my warning',
             'class'   => 'my-warning-class',
-        ], Flash::getMessage()->toArray());
+        ], Flash::get()->toArray());
 
         Flash::error('my error');
 
         $this->assertArraySubset([
             'message' => 'my error',
             'class'   => 'my-error-class',
-        ], Flash::getMessage()->toArray());
+        ], Flash::get()->toArray());
     }
 
     /** @test */
@@ -97,7 +97,7 @@ class FlashTest extends TestCase
             'message' => 'my warning',
             'class'   => 'my-warning-class',
             'id'      => 'unique-id',
-        ], Flash::getMessage()->toArray());
+        ], Flash::get()->toArray());
 
         Flash::warning('my warning', 'unique-id');
 
@@ -105,9 +105,9 @@ class FlashTest extends TestCase
             'message' => 'my warning',
             'class'   => 'my-warning-class',
             'id'      => 'unique-id',
-        ], Flash::getMessage('unique-id')->toArray());
+        ], Flash::get('unique-id')->toArray());
 
-        $this->assertNull(Flash::getMessage('unknown-id'));
+        $this->assertNull(Flash::get('unknown-id'));
     }
 
     /** @test */
@@ -119,18 +119,18 @@ class FlashTest extends TestCase
 
         Flash::warning('my warning');
 
-        $this->assertTrue(Flash::hasMessage());
+        $this->assertTrue(Flash::has());
 
-        $this->assertFalse(Flash::hasMessage('unique-id'));
+        $this->assertFalse(Flash::has('unique-id'));
 
         Flash::warning('my warning', 'unique-id');
 
-        $this->assertTrue(Flash::hasMessage('unique-id'));
+        $this->assertTrue(Flash::has('unique-id'));
     }
 
     /** @test */
     public function empty_flash_message_returns_null(): void
     {
-        $this->assertNull(Flash::getMessage());
+        $this->assertNull(Flash::get());
     }
 }
