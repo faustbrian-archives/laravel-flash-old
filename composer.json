@@ -17,8 +17,8 @@
     ],
     "require": {
         "php": "^7.4",
-        "illuminate/session": "^6.0",
-        "illuminate/support": "^6.0"
+        "illuminate/session": "^6.0|^7.0",
+        "illuminate/support": "^6.0|^7.0"
     },
     "require-dev": {
         "dms/phpunit-arraysubset-asserts": "^0.2.0",
